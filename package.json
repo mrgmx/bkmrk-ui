@@ -1,8 +1,16 @@
 {
   "name": "bookmarksuiyo",
   "private": true,
-  "devDependencies": {
+  "scripts": {
+	  "test": "echo \"Error: no test specified\" && exit 1",
+	  "start": "node server.js",
+	  "postinstall": "bash ./post_install.sh"
+  },
+  "dependencies": {
     "autoprefixer-core": "^5.2.1",
+    "bower": "^1.8.2",
+    "ejs": "^2.5.6",
+    "express": "^4.15.2",
     "grunt": "^0.4.5",
     "grunt-angular-templates": "^0.5.7",
     "grunt-concurrent": "^1.0.0",
@@ -26,13 +34,12 @@
     "grunt-usemin": "^3.0.0",
     "grunt-wiredep": "^2.0.0",
     "jit-grunt": "^0.9.1",
-    "time-grunt": "^1.0.0",
-    "jshint-stylish": "^1.0.0"
+    "jshint-stylish": "^1.0.0",
+    "karma": "^2.0.0",
+    "time-grunt": "^1.0.0"
   },
+  "devDependencies": {},
   "engines": {
     "node": ">=0.10.0"
-  },
-  "dependencies": {
-    "karma": "^2.0.0"
   }
 }
