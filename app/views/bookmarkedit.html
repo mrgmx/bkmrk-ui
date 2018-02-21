@@ -1,0 +1,18 @@
+<p>This is the bookmarkedit view.</p>
+<div class="row marketing">
+    <h4>Name: {{bookmark.title}}</h4>
+    <h4>URL: <a href="{{bookmark.uri}}">{{bookmark.uri}}</a></h4>
+    <h4>Source: {{bookmark.source}}</h4>
+<!-- 
+    <p>
+        {{tags}}
+    </p>
+ -->
+    <tags-input ng-model="bookmark.tags" display-property="name" key-property="id" min-length="2" >     
+        <auto-complete source="searchTags($query)" min-length="1" debounce-delay="500" max-results-to-show="10">
+        </auto-complete>
+    </tags-input>
+    <button class="btn btn-primary btn-sm" ng-click="saveBookmark(bookmark)">
+        Save
+    </button>
+</div>

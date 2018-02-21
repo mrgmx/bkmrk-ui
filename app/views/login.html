@@ -1,0 +1,39 @@
+<p>This is the login view.</p>
+
+
+<form class="form-horizontal" name="loginForm" ng-submit="login(loginForm)" novalidate>
+
+    <div class="form-group">
+        <label class="col-sm-1 control-label">User</label>
+        <div class="col-sm-11">
+            <input type="text" ng-model="credentials.username" name="credentialsUser" class="form-control" maxlength="255" />
+        </div>
+    </div>
+    
+    <div class="form-group">
+        <label class="col-sm-1 control-label">Password</label>
+        <div class="col-sm-11">
+            <input type="text" ng-model="credentials.password" name="credentialsPassword" class="form-control" maxlength="255" />
+        </div>
+    </div>
+    <!-- 
+    http://www.w3schools.com/Bootstrap/bootstrap_forms_inputs2.asp
+     -->
+<!-- 
+     <div class="form-group has-feedback" ng-class="{ 'has-error': isUriInvalid(bookmarkForm) }" >
+        <label class="col-sm-1 control-label" for="inputError">URI</label>
+        <div class="col-sm-11">
+            <input type="url" ng-model="bookmark.uri" name="bookmarkUri" class="form-control" id="inputError" required bookmark-uri-unique>
+            <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+            <span ng-show="isUriInvalid(bookmarkForm)">You must enter a value here</span>
+        </div>
+    </div>
+ -->
+    <div class="form-group">
+        <div class="col-sm-3 col-sm-offset-1">
+            
+            <button class="btn btn-primary" type="submit">Login</button>
+
+        </div>
+    </div>
+</form>

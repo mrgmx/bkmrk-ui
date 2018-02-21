@@ -1,0 +1,208 @@
+<!-- 
+<p>This is the bookmark view.</p>
+-->
+<div class="row marketing">
+
+    <uib-tabset active="activeTab">
+    <uib-tab index="0" deselect="tabDeselected($selectedIndex)" heading="Bookmark">
+    <h4/>
+    <div class="row">
+<!-- 
+        <form class="form-horizontal" name="bookmarkForm" ng-submit="createOrUpdateBookmark(bookmark, bookmarkForm)" novalidate="novalidate">
+ -->
+        <button class="btn btn-primary" ng-click="clearBookmark()">Clear</button>
+        <button class="btn btn-primary" ng-click="clearBookmarkId()">Clear ID</button>
+        <button class="btn btn-primary" ng-click="loadTitle()">Load title</button>
+        <button class="btn btn-primary" ng-click="copyTags()">Copy search tags</button>
+        <button class="btn btn-primary" ng-click="archive()">Archive</button>
+        <button class="btn btn-primary" ng-click="deleteBookmark()" ng-disabled="!bookmark.id">Delete</button>
+        <form class="form-horizontal" name="bookmarkForm" ng-submit="createOrUpdateBookmark(bookmark, bookmarkForm)" novalidate>
+
+            <div class="form-group">
+                <div class="col-sm-11">
+                    <label ng-if="!bookmark.id" class="col-sm-1 control-label">ID:New</label>
+                    <label ng-if="bookmark.id" class="col-sm-1 control-label">ID:{{bookmark.id}}</label>
+                    <label ng-if="bookmark.id" class="col-sm-4 control-label">Added: {{bookmark.dateAdded | date:'yyyy-MM-dd HH:mm'}}</label>
+                    <label ng-if="bookmark.id" class="col-sm-4 control-label">Modified: {{bookmark.lastModified | date:'yyyy-MM-dd HH:mm'}}</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-1 control-label">Title</label>
+                <div class="col-sm-11">
+                    <input type="text" ng-model="bookmark.title" name="bookmarkTitle" class="form-control" maxlength="255" />
+<!-- 
+                    <label ng-show="isInvalidEnabledField(machineForm.machineName, submitted)" class="error">Please type machine name</label>
+ -->
+                </div>
+            </div>
+<!-- 
+            <div class="form-group">
+                <label class="col-sm-3 control-label">bookmarkUri: {{bookmarkForm.bookmarkUri}}</label>
+                <label class="col-sm-3 control-label">isUriInvalid: {{isUriInvalid(bookmarkForm)}}</label>
+            </div>
+ -->
+            <!-- 
+            http://www.w3schools.com/Bootstrap/bootstrap_forms_inputs2.asp
+             -->
+            <div class="form-group has-feedback" ng-class="{ 'has-error': isUriInvalid(bookmarkForm) }" >
+            <!-- <div class="form-group has-error has-feedback"> -->
+                <label class="col-sm-1 control-label" for="inputError">URI</label>
+                <div class="col-sm-11">
+                    <input type="url" ng-model="bookmark.uri" name="bookmarkUri" class="form-control" id="inputError" required bookmark-uri-unique>
+                    <span class="glyphicon glyphicon-remove form-control-feedback"></span>
+                    <span ng-show="isUriInvalid(bookmarkForm)">You must enter a value here</span>
+                </div>
+            </div>
+
+            <div class="form-group">
+            <!-- ng-if="bookmark.systemTagLog && bookmark.systemTagLog.length > 0" class="form-group"> -->
+                <label class="col-sm-10 control-label">System tags log: {{printSystemTagLog()}}</label>
+            </div>
+
+            <h4>Tags ({{bookmark.tags.length}}) {{toJoinedTagNames()}}</h4>
+
+            <tags-input tag-class="{systemTag: isSystemTag($tag)}" on-tag-clicked="tagClicked($tag)" name="bookmarkTags" ng-model="bookmark.tags" display-property="name" min-length="2">
+                <auto-complete source="searchTags($query)" min-length="1" debounce-delay="500" max-results-to-show="10">
+                </auto-complete>
+            </tags-input>
+            <!--
+            <p>$pristine: {{bookmarkForm.bookmarkTags.$pristine}}</p>
+            <p>$dirty: {{bookmarkForm.bookmarkTags.$dirty}}</p>
+            <p>$valid: {{bookmarkForm.bookmarkTags.$valid}}</p>
+            <p>$error: {{bookmarkForm.bookmarkTags.$error}}</p>
+            <p>bookmark: {{bookmark}}</p>
+            -->
+
+            <div class="form-group">
+                <div class="col-sm-3 col-sm-offset-1">
+                    
+                    <button ng-if="!bookmark.id" class="btn btn-primary" type="submit">Create</button>
+                    <button ng-if="bookmark.id"  class="btn btn-primary" type="submit">Update</button>
+
+                </div>
+            </div>
+        </form>
+    </div>
+    
+    </uib-tab>
+    <uib-tab index="1" deselect="tabDeselected($selectedIndex)"  heading="Tag">
+        <div class="row">
+                <h4/>
+
+                <button class="btn btn-primary" ng-click="mergeTag(conflictingTag.id, tag.id)" ng-disabled="!conflictingTag.id">
+                Merge {{tag.id}} -> {{conflictingTag.id}}
+                </button>
+                <button class="btn btn-primary" ng-click="deleteTag()" ng-disabled="!tag.id">Delete</button>
+
+                <form class="form-horizontal" name="tagForm" ng-submit="createOrUpdateTag(tag, tagForm)">
+
+                    <div class="form-group">
+                        <div class="col-sm-11">
+                            <label ng-if="!tag.id" class="col-sm-1 control-label">ID:New</label>
+                            <label ng-if="tag.id" class="col-sm-1 control-label">ID:{{tag.id}}</label>
+                        </div>
+                    </div>
+                    <div class="form-group has-feedback" ng-class="{ 'has-error': isTagNameInvalid(tagForm) }" >
+                        <label class="col-sm-1 control-label" for="tagNameInputError">Name</label>
+                        <div class="col-sm-11">
+                            <input type="text" ng-model="tag.name" name="tagName" class="form-control" id="tagNameInputError" required tag-unique>
+                        </div>
+                    </div>
+
+                    <h4>Aliases ({{tag.aliases.length}})</h4>
+                    <tags-input tag-class="{systemTag: isSystemTag($tag)}" name="tagAliases" ng-model="tag.aliases" on-tag-adding="isTagAliasValid($tag)" min-length="2">
+                    </tags-input>
+                    
+                    <h4 ng-if="conflictingTag.id">Conflicting tag: {{conflictingTag}}</h4>
+
+                    <div class="form-group">
+                        <div class="col-sm-3 col-sm-offset-1">
+                            
+                            <button ng-if="!tag.id" class="btn btn-primary" type="submit">Create</button>
+                            <button ng-if="tag.id"  class="btn btn-primary" type="submit">Update</button>
+
+                        </div>
+                    </div>
+                </form>
+
+        </div>
+
+    </uib-tab>
+    
+    </uib-tab>
+    <uib-tab index="2" deselect="tabDeselected($selectedIndex)" heading="Bulk">
+        <div class="row">
+                <h4/>
+                <form class="form-horizontal" name="bulkForm" ng-submit="bulkLoad(bulk.text, bulk.mode, bulkForm)">
+
+                    <div>
+                        <input type="radio" ng-model="bulk.mode" value="mode1">Brace tags</input>
+                        <input type="radio" ng-model="bulk.mode" value="mode2">JSON</input>
+                    </div>
+                    <textarea rows="10" cols="115" placeholder="{{bulk.placeholder}}" ng-model="bulk.text" />
+                    <div class="form-group">
+                        <div class="col-sm-3 col-sm-offset-1">
+
+                            <button class="btn btn-primary" type="submit">Load</button>
+
+                        </div>
+                    </div>
+                </form>
+        </div>
+
+    </uib-tab>
+    </uib-tabset>
+
+    <h4>Tags ({{tabs[activeTab].tags.length}})</h4>
+
+    <tags-input tag-class="{systemTag: isSystemTag($tag)}" ng-model="tabs[activeTab].tags" display-property="name" key-property="id" min-length="2" 
+        on-tag-added="reloadBookmarksTable()" on-tag-removed="reloadBookmarksTable()" add-from-autocomplete-only=true
+        on-tag-clicked="tagClicked($tag)" >
+        <auto-complete source="searchQueryTags($query)" min-length="1" debounce-delay="500" max-results-to-show="10">
+        </auto-complete>
+    </tags-input>
+
+    <h4>Exclude tags ({{tabs[activeTab].excludedTags.length}})</h4>
+
+    <tags-input tag-class="{systemTag: isSystemTag($tag)}" ng-model="tabs[activeTab].excludedTags" display-property="name" key-property="id" min-length="2" 
+        on-tag-added="reloadBookmarksTable()" on-tag-removed="reloadBookmarksTable()" add-from-autocomplete-only=true >
+        <auto-complete source="searchExcludeTags($query)" min-length="1" debounce-delay="500" max-results-to-show="10">
+        </auto-complete>
+    </tags-input>
+
+    <h4>Associated tags ({{tabs[activeTab].associatedTags.length}})</h4>
+
+    <tags-input tag-class="{systemTag: isSystemTag($tag)}" ng-model="tabs[activeTab].associatedTags" display-property="name" key-property="id" placeholder="."
+        on-tag-removed="addTagFromAssociated($tag)"add-from-autocomplete-only=true  />
+    <button class="btn btn-primary btn-sm" ng-click="searchBookmarks()">
+        Search
+    </button>
+    
+    <h4>Bookmarks ({{bookmarksTotal}})</h4>
+    <table ng-table="bookmarksTable" class="table table-striped table-bordered table-hover">
+        <tr ng-repeat="bookmark in $data" ng-class="{active: hover}" ng-mouseenter="hover = true" ng-mouseleave="hover = false">
+            <td style="width:26%" data-title="'Title'" ng-click="onClick(bookmark)" sortable="'title'">
+                <!-- TODO: open in new tab -->
+                <a href="{{bookmark.uri}}">{{bookmark.title}}</a>
+            </td>
+<!--             
+            <td style="width:20%" data-title="'Uri'" ng-click="onClick(bookmark)" sortable="'uri'">{{bookmark.uri}}</td>
+-->
+            <td style="width:46%" data-title="'Tags'" ng-click="onClick(bookmark)" sortable="'tags'">
+<!-- 
+            {{displayNames(bookmark.tags)}}                
+ -->                
+                <tags-input tag-class="{systemTag: isSystemTag($tag)}" ng-disabled="true" ng-model="bookmark.tags" display-property="name" key-property="id"
+                    placeholder="." add-from-autocomplete-only=true >
+                </tags-input>
+            </td>
+            <td style="width:14%" data-title="'Added'" ng-click="onClick(bookmark)" sortable="'dateAdded'">
+                {{bookmark.dateAdded | date:'yyyy-MM-dd HH:mm'}}
+            </td>
+            <td style="width:14%" data-title="'Modified'" ng-click="onClick(bookmark)" sortable="'lastModified'">
+                {{bookmark.lastModified | date:'yyyy-MM-dd HH:mm'}}
+            </td>
+        </tr>
+    </table>
+
+</div>

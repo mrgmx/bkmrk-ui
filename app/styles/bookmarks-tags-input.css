@@ -1,0 +1,7 @@
+.systemTag {
+  background: rgba(241,231,103,1) !important;
+}
+
+.systemTag.selected {
+  background: rgba(255,93,177,1) !important;
+}
