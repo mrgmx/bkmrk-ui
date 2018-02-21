@@ -2,7 +2,6 @@
   "name": "bookmarksuiyo",
   "private": true,
   "scripts": {
-    "start": "node server.js",
     "postinstall": "bash ./post_install.sh"
   },
   "dependencies": {
